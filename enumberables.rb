@@ -1,2 +1,2 @@
-cop_test = "testing"
+cop_test = 'testing'
 puts "Hello #{cop_test}"
