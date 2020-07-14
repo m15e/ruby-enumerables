@@ -62,7 +62,7 @@ module Enumerable
   end
 
   def my_none
-    if self.kind_of?(Array)
+    if self.kind_of?(Array) 
       all_true = true
       self.my_each do |condition|
         if yield(condition) == true
@@ -74,9 +74,25 @@ module Enumerable
       puts 'This method needs to be called on arrays only'
     end
   end
+
+  def my_count
+    
+  end
   
   
 end
+
+# TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
+
+# count
+
+# ary = [1, 2, 4, 2]
+# ary.count               #=> 4
+# ary.count(2)            #=> 2
+# ary.count{ |x| x%2==0 } #=> 3
+
+
+# none
 
 # %w{ant bear cat}.none? { |word| word.length == 5 } #=> true
 # %w{ant bear cat}.none? { |word| word.length >= 4 } #=> false
