@@ -32,10 +32,27 @@ module Enumerable
       puts 'This method needs to be called on arrays only'
     end
   end
+
+  def my_all
+    if self.kind_of?(Array)
+      all_true = true
+      self.my_each do |condition|
+        if yield(condition) != true
+          all_true = false
+        end
+      end
+      return all_true
+    else
+      puts 'This method needs to be called on arrays only'
+    end
+  end
+  
   
 end
 
-p ["John", "Peter", "Dave"].my_select { |num| num == "Dave" }
+p [ ].my_all { |num| num > 10 }
+
+p [ ].all? { |num| num > 10 }
 
 # [1,2,3,20,30,40] array.select { |num| num > 10 }
 
