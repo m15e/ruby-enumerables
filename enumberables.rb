@@ -1,11 +1,11 @@
 # Our enumerable methods
 # rubocop:disable Metrics/ModuleLength
-
 module Enumerable
   def my_each
-    if self.is_a?(Array)
-      self.length.times do |i|
-        yield(self[i])
+    arr = self
+    if arr.is_a?(Array)
+      arr.length.times do |i|
+        yield(arr[i])
       end
     else
       puts 'This method needs to be called on arrays only'
@@ -13,78 +13,82 @@ module Enumerable
   end
 
   def my_each_with_index
-    if self.kind_of?(Array)
-      self.length.times do |i|
-        yield(self[i], i)
+    arr = self
+    if arr.is_a?(Array)
+      arr.length.times do |i|
+        yield(arr[i], i)
       end
     else
       puts 'This method needs to be called on arrays only'
     end
   end
-  
-  def my_select 
-    if self.kind_of?(Array)
+
+  def my_select
+    arr = self
+    if arr.is_a?(Array)
       new_array = []
-      self.my_each do |condition|
+      arr.my_each do |condition|
         if yield(condition) == true
           new_array.push(condition)
         end
       end
-      return new_array
+      new_array
     else
       puts 'This method needs to be called on arrays only'
     end
   end
 
   def my_all
-    if self.kind_of?(Array)
+    arr = self
+    if arr.is_a?(Array)
       all_true = true
-      self.my_each do |condition|
+      arr.my_each do |condition|
         if yield(condition) != true
           all_true = false
         end
       end
-      return all_true
+      all_true
     else
       puts 'This method needs to be called on arrays only'
     end
   end
 
   def my_any
-    if self.kind_of?(Array)
+    arr = self
+    if arr.is_a?(Array)
       all_true = false
-      self.my_each do |condition|
-        if yield(condition) == true
-          all_true = true
-        end
+      arr.my_each do |condition|
+        all_true = yield(condition) || all_true
       end
-      return all_true
+      all_true
     else
       puts 'This method needs to be called on arrays only'
     end
   end
 
   def my_none
-    if self.kind_of?(Array) 
+    arr = self
+    if arr.is_a?(Array)
       all_true = true
-      self.my_each do |condition|
-        if yield(condition) == true
+      arr.my_each do |condition|
+        if yield(condition)
           all_true = false
         end
       end
-      return all_true
+      all_true
     else
       puts 'This method needs to be called on arrays only'
     end
   end
 
-  def my_count(argument=nil)
-   counter=0
-   if argument.nil?
-    if block_given?
-      self.my_each do |current_element|
-        if yield(current_element) 
-          counter+=1
+  def my_count(argument = nil)
+    counter = 0
+    if argument.nil?
+      if block_given?
+        arr = self
+        arr.my_each do |current_element|
+        if yield(current_element)
+          counter += 1
         end
       end
     else
@@ -199,7 +203,20 @@ def multiply_els(argument)
     end
   end
 end
+# rubocop:enable Metrics/ModuleLength
 
+# ##################################################
+# numbers = [21, 42, 303, 499, 550, 811]
+
+# # puts numbers.my_any { |number| number > 500 }
+# #=> true
+
+# puts numbers.my_any { |number| number < 20 }
+# #=> false
+
+##################################################
+# array = ['people','from','this','this','company']
+# array.my_each {|curr| puts curr}
 
 # TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
 
@@ -244,8 +261,8 @@ end
 
 # none
 
-# %w{ant bear cat}.none? { |word| word.length == 5 } #=> true
-# %w{ant bear cat}.none? { |word| word.length >= 4 } #=> false
+# puts %w{ant bear cat}.my_none { |word| word.length == 5 } #=> true
+# puts %w{ant bear cat}.my_none { |word| word.length >= 4 } #=> false
 # %w{ant bear cat}.none?(/d/)                        #=> true
 # [1, 3.14, 42].none?(Float)                         #=> false
 # [].none?                                           #=> true
@@ -266,9 +283,9 @@ end
 # [20,30,40]
 
 ######################################################################
-a = [18, 22, 33, 3, 5, 6] 
-proc_to_pass = Proc.new {|num| num > 10 }
-puts a.my_map_with_proc_block(proc_to_pass) {|num| num > 10 }
+# a = [18, 22, 33, 3, 5, 6] 
+# proc_to_pass = Proc.new {|num| num > 10 }
+# puts a.my_map_with_proc_block(proc_to_pass) {|num| num > 10 }
 # out: [true, true, true, false, false, false]
 # b = [1, 4, 1, 1, 88, 9] 
 # proc_to_pass = Proc.new {|x| x.odd? }
