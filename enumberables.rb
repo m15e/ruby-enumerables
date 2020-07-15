@@ -1,6 +1,9 @@
+# Our enumerable methods
+# rubocop:disable Metrics/ModuleLength
+
 module Enumerable
   def my_each
-    if self.kind_of?(Array)
+    if self.is_a?(Array)
       self.length.times do |i|
         yield(self[i])
       end
@@ -112,7 +115,6 @@ module Enumerable
   def my_inject(num=nil, symb=nil)
     if num.nil? and symb.nil?
       accumulator = self[0]
-      
       if block_given?
         (self.length-1).times do |i|    
           accumulator = yield(accumulator, self[i+1])               
@@ -120,7 +122,6 @@ module Enumerable
       end
       accumulator
     else
-      
       if num and symb
         if block_given?
           puts 'we don\'t need a block'
@@ -132,12 +133,8 @@ module Enumerable
           accumulator
         end
       end
-      
       if num.nil? or symb.nil?
-        
-        param = num.class or symb.class
-        
-        if param==Symbol
+        if num.is_a?(Symbol)
           if block_given?
             puts 'You don\'t need a block here'
           else
@@ -160,16 +157,25 @@ module Enumerable
       end
     end
   end
+
+  def multiply_els
+    puts 'hello world'
+  end
 end
+
+
+
+
 # TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
 
 # count
 # p '\n'
 
 ######################################
-# arry = [10,2,3,4]
+# arry = [1,2,3,4,5]
 # puts arry.inject(:*)
 # puts arry.my_inject(:*)
+multiply_els()
 # longest = %w{ sheep cat bear }.my_inject do |memo, word|
 #   #p memo
 #   #p word
