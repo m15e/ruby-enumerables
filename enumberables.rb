@@ -157,14 +157,20 @@ module Enumerable
       end
     end
   end
-
-  def multiply_els
-    puts 'hello world'
-  end
 end
 
-
-
+def multiply_els(argument)
+  if argument.nil?
+    #there is no argument
+  else
+    #there is argument
+    if argument.is_a? Array
+      argument.my_inject(:*)
+    else
+      puts 'Pass an array'
+    end
+  end
+end
 
 # TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
 
@@ -175,7 +181,7 @@ end
 # arry = [1,2,3,4,5]
 # puts arry.inject(:*)
 # puts arry.my_inject(:*)
-multiply_els()
+puts multiply_els([1,2,3])
 # longest = %w{ sheep cat bear }.my_inject do |memo, word|
 #   #p memo
 #   #p word
