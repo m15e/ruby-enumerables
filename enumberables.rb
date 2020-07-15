@@ -109,10 +109,61 @@ module Enumerable
     new_array
   end
 
+  def my_inject(argument=nil)
+
+    if argument.nil?
+      # check for string
+      if self[0].is_a?(String)
+        accumulator = self[0]
+      else
+        accumulator = 0
+      end
+    elsif argument.is_a?(Symbol)
+      accumulator=accumulator.send(Symbol)    
+
+    end  
+
+    if block_given?
+
+      self.my_each do |current_element|    
+
+        accumulator = yield(accumulator, current_element)    
+                   
+      end    
+
+    end
+    accumulator
+  end
+
 end
 # TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
 
 # count
+# p '\n'
+
+longest = %w{ cat sheep bear }.my_inject do |memo, word|
+  #p memo
+  #p word
+  memo.length > word.length ? memo : word
+end
+p longest   
+
+# ar = [2,2,2,2]
+
+# p ar.my_inject {|a, v| a + v}
+
+
+# symbol +, %, -, /, //
+
+
+# ta = ['ss','dsad','sdasd','asdas']
+# p ta.inject(:*)
+
+# p ta.my_inject { |sum, n| sum + n }
+# p ta.inject { |sum, n| sum + n }
+
+
+
 
 # ary1=['people','people','foo', 'class','microverse','git']
 # ary = [1, 2, 4, 2]
