@@ -1,5 +1,9 @@
 # Our enumerable methods
 # rubocop:disable Metrics/ModuleLength
+# rubocop:disable Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/MethodLength
+# rubocop:disable Metrics/PerceivedComplexity
+# rubocop:disable Metrics/BlockNesting
 module Enumerable
   def my_each
     arr = self
@@ -107,9 +111,6 @@ module Enumerable
     new_array
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/PerceivedComplexity
   def my_inject(num = nil, symb = nil)
     arr = self
     if num.nil? and symb.nil?
@@ -156,27 +157,29 @@ module Enumerable
   end
 
   def my_map_with_proc(passed_proc)
+    arr = self
     new_array = []
-    self.my_each do |current_element|
+    arr.my_each do |current_element|
       new_array.push(passed_proc.call(current_element))
     end
     new_array
   end
 
-  def my_map_with_proc_block(passed_proc=nil)
+  def my_map_with_proc_block(passed_proc = nil)
+    arr = self
     if passed_proc.nil?
       if block_given?
         new_array = []
-        self.my_each do |current_element|
+        arr.my_each do |current_element|
           new_array.push(yield(current_element))
         end
         new_array
       else
         puts 'Provide either proc or block'
       end
-    else 
+    else
       new_array = []
-      self.my_each do |current_element|
+      arr.my_each do |current_element|
         new_array.push(passed_proc.call(current_element))
       end
       new_array
@@ -185,10 +188,7 @@ module Enumerable
 end
 
 def multiply_els(argument)
-  if argument.nil?
-    #there is no argument
-  else
-    #there is argument
+  unless argument.nil?
     if argument.is_a? Array
       argument.my_inject(:*)
     else
@@ -200,103 +200,4 @@ end
 # rubocop:enable Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/PerceivedComplexity
-
-# ##################################################
-# numbers = [21, 42, 303, 499, 550, 811]
-
-# # puts numbers.my_any { |number| number > 500 }
-# #=> true
-
-# puts numbers.my_any { |number| number < 20 }
-# #=> false
-
-##################################################
-# array = ['people','from','this','this','company']
-# array.my_each {|curr| puts curr}
-
-# TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
-
-# count
-# p '\n'
-
-######################################
-# arry = [1,2,3,4,5]
-# puts arry.inject(:*)
-# puts arry.my_inject(:*)
-# puts multiply_els([1,2,3])
-# longest = %w{ sheep cat bear }.my_inject do |memo, word|
-#   #p memo
-#   #p word
-#   memo.length > word.length ? memo : word
-# end
-# p longest   
-
-# ar = [2,2,2,2]
-
-# p ar.my_inject {|a, v| a + v}
-
-
-# symbol +, %, -, /, //
-
-
-# ta = ['ss','dsad','sdasd','asdas']
-# p ta.inject(:*)
-
-# p ta.my_inject { |sum, n| sum + n }
-# p ta.inject { |sum, n| sum + n }
-
-
-
-
-# ary1=['people','people','foo', 'class','microverse','git']
-# ary = [1, 2, 4, 2]
-# puts ary1.my_count             #=> 4
-# p ary.count(2)            #=> 2
-# puts ary.count{ |x| x%2==0 } #=> 3
-
-
-# none
-
-# puts %w{ant bear cat}.my_none { |word| word.length == 5 } #=> true
-# puts %w{ant bear cat}.my_none { |word| word.length >= 4 } #=> false
-# %w{ant bear cat}.none?(/d/)                        #=> true
-# [1, 3.14, 42].none?(Float)                         #=> false
-# [].none?                                           #=> true
-# [nil].none?                                        #=> true
-# [nil, false].none?                                 #=> true
-# [nil, false, true].none?                           #=> false
-
-# p [1, 3.14, 42].none?(Float) # => returns true
-
-# p [nil, false, true].my_none {}
-
-#p [].my_none { |num| num.kind_of?(Float) } # => false
-
-#p ['ant', 'bear', 'cat'].none? { |word| word.length >= 4 }
-
-# [1,2,3,20,30,40] array.select { |num| num > 10 }
-
-# [20,30,40]
-
-######################################################################
-# a = [18, 22, 33, 3, 5, 6] 
-# proc_to_pass = Proc.new {|num| num > 10 }
-# puts a.my_map_with_proc_block(proc_to_pass) {|num| num > 10 }
-# out: [true, true, true, false, false, false]
-# b = [1, 4, 1, 1, 88, 9] 
-# proc_to_pass = Proc.new {|x| x.odd? }
-# puts b.my_map_with_proc(proc_to_pass)
-# out: [true, false, true, true, false, true]
-# c = [18, 22, 3, 3, 53, 6] 
-# proc_to_pass = Proc.new {|num| num > 10 }
-# puts c.my_map_with_proc(proc_to_pass)
-# out: [true, true, false, false, true, false]
-# proc_to_pass = Proc.new {|num| num.even? }
-# puts c.my_map_with_proc(proc_to_pass)
-# out: [true, true, false, false, false, true]
-# array = ['a', 'b', 'c']
-# proc_to_pass = Proc.new { |string| string.upcase}
-# puts array.my_map_with_proc(proc_to_pass)
-# puts 'people'.my_map { |string| string+2}
-# # out: ["A", "B", "C"]
-
+# rubocop:enable Metrics/BlockNesting
