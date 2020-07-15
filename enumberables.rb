@@ -157,6 +157,34 @@ module Enumerable
       end
     end
   end
+
+  def my_map_with_proc(passed_proc)
+    new_array = []
+    self.my_each do |current_element|
+      new_array.push(passed_proc.call(current_element))
+    end
+    new_array
+  end
+
+  def my_map_with_proc_block(passed_proc=nil)
+    if passed_proc.nil?
+      if block_given?
+        new_array = []
+        self.my_each do |current_element|
+          new_array.push(yield(current_element))
+        end
+        new_array
+      else
+        puts 'Provide either proc or block'
+      end
+    else 
+      new_array = []
+      self.my_each do |current_element|
+        new_array.push(passed_proc.call(current_element))
+      end
+      new_array
+    end
+  end
 end
 
 def multiply_els(argument)
@@ -172,6 +200,7 @@ def multiply_els(argument)
   end
 end
 
+
 # TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
 
 # count
@@ -181,7 +210,7 @@ end
 # arry = [1,2,3,4,5]
 # puts arry.inject(:*)
 # puts arry.my_inject(:*)
-puts multiply_els([1,2,3])
+# puts multiply_els([1,2,3])
 # longest = %w{ sheep cat bear }.my_inject do |memo, word|
 #   #p memo
 #   #p word
@@ -236,19 +265,25 @@ puts multiply_els([1,2,3])
 
 # [20,30,40]
 
-################################
-# a = [18, 22, 33, 3, 5, 6] 
-# puts a.my_map {|num| num > 10 }
+######################################################################
+a = [18, 22, 33, 3, 5, 6] 
+proc_to_pass = Proc.new {|num| num > 10 }
+puts a.my_map_with_proc_block(proc_to_pass) {|num| num > 10 }
 # out: [true, true, true, false, false, false]
 # b = [1, 4, 1, 1, 88, 9] 
-# puts b.my_map {|x| x.odd? }
+# proc_to_pass = Proc.new {|x| x.odd? }
+# puts b.my_map_with_proc(proc_to_pass)
 # out: [true, false, true, true, false, true]
 # c = [18, 22, 3, 3, 53, 6] 
-# puts c.my_map {|num| num > 10 }
+# proc_to_pass = Proc.new {|num| num > 10 }
+# puts c.my_map_with_proc(proc_to_pass)
 # out: [true, true, false, false, true, false]
-# puts c.my_map {|num| num.even? }
+# proc_to_pass = Proc.new {|num| num.even? }
+# puts c.my_map_with_proc(proc_to_pass)
 # out: [true, true, false, false, false, true]
-# array = [1, 2, 3]
+# array = ['a', 'b', 'c']
+# proc_to_pass = Proc.new { |string| string.upcase}
+# puts array.my_map_with_proc(proc_to_pass)
 # puts 'people'.my_map { |string| string+2}
 # # out: ["A", "B", "C"]
 
