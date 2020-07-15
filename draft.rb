@@ -1,7 +1,6 @@
 def draft
-    ['people','foo', 'class'].each_with_index do |curr, i|
-        puts "current number is #{curr} and it's on index #{i}"
-    end
+   res = ['people','people','foo', 'class'].count('people')
+        puts res
 end
 
 draft()

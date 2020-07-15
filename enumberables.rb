@@ -75,21 +75,40 @@ module Enumerable
     end
   end
 
-  def my_count
-    
+  def my_count(argument=nil)
+   counter=0
+   if argument.nil?
+    if block_given?
+      self.my_each do |current_element|
+        if yield(current_element) 
+          counter+=1
+        end
+      end
+    else
+      self.my_each {counter+=1}
+    end
+   else
+    self.my_each do |current_element|
+      if current_element == argument
+        counter+=1
+      end
+    end
+   end
+   counter
   end
-  
-  
-end
 
+
+
+end
 # TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
 
 # count
 
+# ary1=['people','people','foo', 'class','microverse','git']
 # ary = [1, 2, 4, 2]
-# ary.count               #=> 4
-# ary.count(2)            #=> 2
-# ary.count{ |x| x%2==0 } #=> 3
+# puts ary1.my_count             #=> 4
+# p ary.count(2)            #=> 2
+# puts ary.count{ |x| x%2==0 } #=> 3
 
 
 # none
@@ -105,7 +124,7 @@ end
 
 # p [1, 3.14, 42].none?(Float) # => returns true
 
-p [nil, false, true].my_none {}
+# p [nil, false, true].my_none {}
 
 #p [].my_none { |num| num.kind_of?(Float) } # => false
 
