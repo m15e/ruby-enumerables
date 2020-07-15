@@ -31,11 +31,7 @@ module Enumerable
     arr = self
     if arr.is_a?(Array)
       new_array = []
-      arr.my_each do |condition|
-        if yield(condition) == true
-          new_array.push(condition)
-        end
-      end
+      arr.my_each { |condition| new_array.push(condition) if yield(condition) }
       new_array
     else
       puts 'This method needs to be called on arrays only'
@@ -46,11 +42,7 @@ module Enumerable
     arr = self
     if arr.is_a?(Array)
       all_true = true
-      arr.my_each do |condition|
-        if yield(condition) != true
-          all_true = false
-        end
-      end
+      arr.my_each { |condition| all_true = yield(condition) ? all_true : false }
       all_true
     else
       puts 'This method needs to be called on arrays only'
@@ -75,9 +67,7 @@ module Enumerable
     if arr.is_a?(Array)
       all_true = true
       arr.my_each do |condition|
-        if yield(condition)
-          all_true = false
-        end
+        all_true = yield(condition) ? false : all_true
       end
       all_true
     else
@@ -128,7 +118,7 @@ module Enumerable
         else
           accumulator = num
           arr.length.times do |i|
-            accumulator=accumulator.send(symb, arr[i])
+            accumulator = accumulator.send(symb, arr[i])
           end
           accumulator
         end
@@ -187,15 +177,16 @@ module Enumerable
   end
 end
 
-def multiply_els(argument)
-  unless argument.nil?
-    if argument.is_a? Array
-      argument.my_inject(:*)
-    else
-      puts 'Pass an array'
-    end
+def multiply_els(argument = nil)
+  return to_enum unless argument
+
+  if argument.is_a? Array
+    argument.my_inject(:*)
+  else
+    puts 'Pass an array'
   end
 end
+
 # rubocop:enable Metrics/ModuleLength
 # rubocop:enable Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/MethodLength
