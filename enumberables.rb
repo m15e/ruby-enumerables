@@ -97,24 +97,27 @@ module Enumerable
   end
 
   def my_map
+    arr = self
     new_array = []
     if block_given?
-      self.my_each do |current_element|
-        new_array.push(yield(current_element))
-      end
+      arr.my_each { |current_element| new_array.push(yield(current_element)) }
     else
       puts 'You should specify block'
     end
     new_array
   end
 
-  def my_inject(num=nil, symb=nil)
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
+  def my_inject(num = nil, symb = nil)
+    arr = self
     if num.nil? and symb.nil?
       accumulator = self[0]
       if block_given?
-        (self.length-1).times do |i|    
-          accumulator = yield(accumulator, self[i+1])               
-        end 
+        (arr.length - 1).times do |i|
+          accumulator = yield(accumulator, arr[i + 1])
+        end
       end
       accumulator
     else
@@ -122,30 +125,28 @@ module Enumerable
         if block_given?
           puts 'we don\'t need a block'
         else
-          accumulator=num
-          self.length.times do |i|
-            accumulator=accumulator.send(symb, self[i])
+          accumulator = num
+          arr.length.times do |i|
+            accumulator=accumulator.send(symb, arr[i])
           end
           accumulator
         end
       end
       if num.nil? or symb.nil?
         if num.is_a?(Symbol)
-          if block_given?
-            puts 'You don\'t need a block here'
-          else
-            accumulator=self[0]
-            symbol = num;
-            (self.length-1).times do |i|
-              accumulator=accumulator.send(symbol,self[i+1])
+          unless block_given?
+            accumulator = arr[0]
+            symbol = num
+            (arr.length - 1).times do |i|
+              accumulator = accumulator.send(symbol, arr[i + 1])
             end
             accumulator
           end
-        elsif param==Integer
+        elsif num.is_a?(Integer)
           if block_given?
-            accumulator=num
-            self.length.times do |i|
-              accumulator=yield(accumulator,self[i])
+            accumulator = num
+            arr.length.times do |i|
+              accumulator = yield(accumulator, arr[i])
             end
             accumulator
           end
@@ -196,6 +197,9 @@ def multiply_els(argument)
   end
 end
 # rubocop:enable Metrics/ModuleLength
+# rubocop:enable Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/MethodLength
+# rubocop:enable Metrics/PerceivedComplexity
 
 # ##################################################
 # numbers = [21, 42, 303, 499, 550, 811]
