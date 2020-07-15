@@ -109,31 +109,114 @@ module Enumerable
     new_array
   end
 
-  def my_inject(argument=nil)
-
-    if argument.nil?
-      # check for string
-      if self[0].is_a?(String)
-        accumulator = self[0]
-      else
-        accumulator = 0
+  def my_inject(num=nil, symb=nil)
+    if num.nil? and symb.nil?
+      accumulator = self[0]
+      #there is no number and no symbol
+      if block_given?
+        (self.length-1).times do |i|    
+          accumulator = yield(accumulator, self[i+1])               
+        end 
       end
-    elsif argument.is_a?(Symbol)
-      accumulator=accumulator.send(Symbol)    
+      accumulator
+    else
+      #there is probably both number and symbol
+      if num and symb
+        if block_given?
+          puts 'we don\'t need a block'
+        else
+          accumulator=num
+          self.length.times do |i|
+            accumulator=accumulator.send(symb, self[i])
+          end
+          accumulator
+        end
+      end
+      #there is probably either number or symbol
+      if num.nil? or symb.nil?
+        
+        param = num.class or symb.class
+        
+        if param==Symbol
+          if block_given?
+            puts 'You don\'t need a block here'
+          else
+            accumulator=self[0]
+            (self.length-1).times do |i|
+              # accumulator=accumulator.send(symb,self[i+1])
+              puts self[i]
+            end
+            accumulator
+          end
+        elsif param==Integer
+          if block_given?
+            accumulator=num
+            self.length.times do |i|
+              accumulator=yield(accumulator,self[i])
+            end
+            accumulator
+          end
+        end
 
-    end  
+      #   # there symbol no num
+      #   if symb.is_a?(Symbol)
+      #     if block_given?
+      #       puts 'You don\'t need a block here'
+      #     else
+      #       accumulator=self[0]
+      #       (self.length-1).times do |i|
+      #         accumulator=accumulator.send(symb,self[i+1])
+      #       end
+      #       accumulator
+      #     end
+      #   end
+      # elsif !num.nil? and symb.nil?
 
-    if block_given?
-
-      self.my_each do |current_element|    
-
-        accumulator = yield(accumulator, current_element)    
-                   
-      end    
-
+      #   #there is only num no symb
+      #   if block_given?
+      #     accumulator=num
+      #     self.length.times do |i|
+      #       accumulator=yield(accumulator,self[i])
+      #     end
+      #     accumulator
+      #   else
+      #     puts 'You need to pass a block'
+      #   end
+        
+      end
     end
-    accumulator
   end
+
+
+
+
+
+
+
+
+
+  #   if symb.nil?
+  #     # check for string
+  #     if self[0].is_a?(String)
+  #       accumulator = self[0]
+  #     else
+  #       accumulator = 0
+  #     end
+  #   elsif symb.is_a?(Symbol)
+
+  #     accumulator = self[0]
+      
+  #     (self.length-1).times do |counter|
+  #       accumulator = accumulator.send(symb, self[counter+1])
+  #     end
+  #   end  
+  #   if block_given?
+  #     self.my_each do |current_element|    
+  #       accumulator = yield(accumulator, current_element)               
+  #     end    
+  #   end
+  #   accumulator
+  # end
 
 end
 # TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
@@ -141,12 +224,16 @@ end
 # count
 # p '\n'
 
-longest = %w{ cat sheep bear }.my_inject do |memo, word|
-  #p memo
-  #p word
-  memo.length > word.length ? memo : word
-end
-p longest   
+######################################
+arry = [1,2,3,4]
+# puts arry.inject(:+)
+puts arry.my_inject(:+)
+# longest = %w{ sheep cat bear }.my_inject do |memo, word|
+#   #p memo
+#   #p word
+#   memo.length > word.length ? memo : word
+# end
+# p longest   
 
 # ar = [2,2,2,2]
 
@@ -210,3 +297,4 @@ p longest
 # array = [1, 2, 3]
 # puts 'people'.my_map { |string| string+2}
 # # out: ["A", "B", "C"]
+

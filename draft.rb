@@ -1,6 +1,7 @@
 def draft
-   res = ['people','people','foo', 'class'].count('people')
-        puts res
+  ['r','u','b','y'].length.times do |i|
+    puts i
+  end
 end
 
 draft()
