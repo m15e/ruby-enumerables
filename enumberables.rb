@@ -83,25 +83,17 @@ module Enumerable
 
   def my_count(argument = nil)
     counter = 0
+    arr = self
     if argument.nil?
       if block_given?
-        arr = self
-        arr.my_each do |current_element|
-        if yield(current_element)
-          counter += 1
-        end
+        arr.my_each { |current_element| yield(current_element) ? counter += 1 : '' }
+      else
+        arr.my_each { counter += 1 }
       end
     else
-      self.my_each {counter+=1}
+      arr.my_each { |current_element| current_element == argument ? counter += 1 : '' }
     end
-   else
-    self.my_each do |current_element|
-      if current_element == argument
-        counter+=1
-      end
-    end
-   end
-   counter
+    counter
   end
 
   def my_map
