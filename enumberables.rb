@@ -97,7 +97,17 @@ module Enumerable
    counter
   end
 
-
+  def my_map
+    new_array = []
+    if block_given?
+      self.my_each do |current_element|
+        new_array.push(yield(current_element))
+      end
+    else
+      puts 'You should specify block'
+    end
+    new_array
+  end
 
 end
 # TODO: or self.kind_of?(Hash) methods should apply to dictionaries also
@@ -133,3 +143,19 @@ end
 # [1,2,3,20,30,40] array.select { |num| num > 10 }
 
 # [20,30,40]
+
+################################
+# a = [18, 22, 33, 3, 5, 6] 
+# puts a.my_map {|num| num > 10 }
+# out: [true, true, true, false, false, false]
+# b = [1, 4, 1, 1, 88, 9] 
+# puts b.my_map {|x| x.odd? }
+# out: [true, false, true, true, false, true]
+# c = [18, 22, 3, 3, 53, 6] 
+# puts c.my_map {|num| num > 10 }
+# out: [true, true, false, false, true, false]
+# puts c.my_map {|num| num.even? }
+# out: [true, true, false, false, false, true]
+# array = [1, 2, 3]
+# puts 'people'.my_map { |string| string+2}
+# # out: ["A", "B", "C"]
