@@ -36,12 +36,40 @@ module Enumerable
 
   def my_all(argument = nil)
     arr = self
-    if arr.is_a?(Array)
+    arr = arr.is_a?(Array) ? arr : arr.to_a
+    is_block = block_given?
+    is_argument = !argument.nil?
+
+    if is_block && is_argument
+      if argument.is_a?(Regexp)
+        all_true = true
+        arr.my_each { |current_element| all_true = argument.match(current_element) ? all_true : false }
+        all_true
+      elsif argument.class == Class
+        all_true = true
+        arr.my_each { |current_element| all_true = current_element.class == argument || Numeric ? all_true : false }
+        all_true
+      end
+    elsif is_block && !is_argument
       all_true = true
       arr.my_each { |condition| all_true = yield(condition) ? all_true : false }
       all_true
+    elsif !is_block && is_argument
+      if argument.is_a?(Regexp)
+        all_true = true
+        arr.my_each { |current_element| all_true = argument.match(current_element) ? all_true : false }
+        all_true
+      elsif argument.class == Class
+        all_true = true
+        arr.my_each { |current_element| all_true = current_element.class == argument || Numeric ? all_true : false }
+        all_true
+      end
+    elsif !is_block && !is_argument
+      all_true = true
+      arr.my_each { |current_element| all_true = current_element ? all_true : false }
+      all_true
     else
-      puts 'This method needs to be called on arrays only'
+      arr.to_enum
     end
   end
 
@@ -189,11 +217,11 @@ end
 # rubocop:enable Metrics/PerceivedComplexity
 # rubocop:enable Metrics/BlockNesting
 
-arr = [5,10,15]
+# arr = [5,10,15]
 
-rnge = (5..10)
+# rnge = (5..10)
 
-hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
+# hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 
 
 #### ALL tests
@@ -205,17 +233,25 @@ hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 # p %w[ant bear cat].all? { |word| word.length >= 4 } #=> false
 # p %w[ant bear cat].my_all { |word| word.length >= 4 } # -- pass
 
-# p [].all?                                           #=> true -- pass
-# p [].my_all    
+# p [ ].all?                                           #=> true -- pass
+# p [ ].my_all    
+
+# array = [3, 4, 5, 6, 7]
+# range = (3..7)
+# hash = { num:2, em:4, peop:5 }
+# p hash.all?{|i| i>1}
 
 # p %w[ant bear cat].all?(/t/)
-# p %w[ant bear cat].my_all(/t/)                        #=> false -- fail
+# p %w[ant bear cat].my_all(/t/)                       #=> false -- fail
 
-# p [1, 2i, 3.14].all?(Numeric)                       #=> true -- fail
-# p [1, 2i, 3.14].my_all(Numeric)
+# p [1, 2i, 3.14].all?( Numeric )                       #=> true -- fail
+# p [1, 2i, 3.14].my_all(Numeric) 
 
-p [nil, true, 99].all?                              #=> false -- fail
-p [nil, true, 99].my_all
+# p [nil, true, 99].all?                              #=> false -- fail
+# p [nil, true, 99].my_all
+
+# p (1..5).all?(String)
+# p (1..5).my_all(String)
 
 
 
