@@ -16,24 +16,22 @@ module Enumerable
 
   def my_each_with_index
     arr = self
-
     if block_given?     
       arr = arr.is_a?(Array) ? arr : arr.to_a   
       arr.length.times {|i| yield(arr[i], i)}              
     end
-    arr.to_enum
-    
+    arr.to_enum    
   end
 
   def my_select
-    arr = self
-    if arr.is_a?(Array)
-      new_array = []
-      arr.my_each { |condition| new_array.push(condition) if yield(condition) }
-      new_array
-    else
-      puts 'This method needs to be called on arrays only'
+    arr = self    
+    if block_given?
+      new_arr = []
+      arr = arr.is_a?(Array) ? arr : arr.to_a   
+      arr.my_each { |condition| new_arr.push(condition) if yield(condition) }
+      new_arr
     end
+    arr.to_enum
   end
 
   def my_all
@@ -197,6 +195,20 @@ rnge = (5..10)
 
 hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 
+#p arr.select { |n| !n.zero? }
+#p rnge.select { |n| !n.zero? }
+
+# p hsh.select { |n,v| p "#{n},v: #{v}" }
+
+# puts "---"*50
+
+# p hsh.my_select { |n,v| p "#{n},v: #{v}" }
+
+p [1,2,3,4,5].select #{ |num|  num.even?  } 
+
+p [1,2,3,4,5].my_select #{ |num|  num.even?  } 
+
+
 #p hsh.to_a #{|v| puts "v: #{v}" }
 #hsh.my_each {|v| puts "v: #{v}" }
 # rnge.each {|v| puts "v: #{v}" }
@@ -212,10 +224,10 @@ hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 # %w(cat dog wombat).each.with_index { |i, idx| p "item: #{i} idx:  #{idx}" }   #=> {"cat"=>0, "dog"=>1, "wombat"=>2}
 #p (5..10).to_a
 
-hash = Hash.new
-%w(cat dog wombat).my_each_with_index { |item, index|
-  hash[item] = index
-}
+# hash = Hash.new
+# %w(cat dog wombat).my_each_with_index { |item, index|
+#   hash[item] = index
+# }
 
-p hash   #=> {"cat"=>0, "dog"=>1, "wombat"=>2} 
+# p hash   #=> {"cat"=>0, "dog"=>1, "wombat"=>2} 
 
