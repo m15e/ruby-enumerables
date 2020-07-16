@@ -176,8 +176,10 @@ module Enumerable
 
   def my_inject(num = nil, symb = nil)
     arr = self
+    arr = arr.is_a?(Array) ? arr : arr.to_a
+
     if num.nil? and symb.nil?
-      accumulator = self[0]
+      accumulator = arr[0]
       if block_given?
         (arr.length - 1).times do |i|
           accumulator = yield(accumulator, arr[i + 1])
@@ -190,13 +192,13 @@ module Enumerable
           puts 'we don\'t need a block'
         else
           accumulator = num
-          arr.length.times do |i|
-            accumulator = accumulator.send(symb, arr[i])
-          end
-          accumulator
+          arr.length.times { |i| accumulator = accumulator.send(symb, arr[i]) }
+          p "acc: #{accumulator}"
+          #accumulator
         end
       end
       if num.nil? or symb.nil?
+        p "num #{num} "
         if num.is_a?(Symbol)
           unless block_given?
             accumulator = arr[0]
@@ -289,16 +291,45 @@ end
 # p [nil, true, 99].my_any
 
 # array = [3, 4, 5, 6, 7]
-range = (3..7)
+#range = (3..7)
 # hash = { num:2, em:2, peop:5 }
 
 # hash.map { |k,v| p v }
 
 # hash.my_map { |k,v| p v }
 
+p (5..10).reduce(:+)                             #=> 45
+# Same using a block and inject
+p (5..10).inject { |sum, n| sum + n }            #=> 45
+# Multiply some numbers
+p (5..10).reduce(1, :*)                          #=> 151200
+# Same using a block
+p (5..10).inject(1) { |product, n| product * n } #=> 151200
+# find the longest word
+longest = %w{ cat sheep bear }.inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+puts longest                                        #=> "sheep"
+
+puts '---'*50
+
+p (5..10).my_inject(:+)                             #=> 45
+# Same using a block and inject
+p (5..10).my_inject { |sum, n| sum + n }            #=> 45
+# Multiply some numbers
+p (5..10).my_inject(1, :*)                          #=> 151200 # -> failing
+# Same using a block
+p (5..10).my_inject(1) { |product, n| product * n } #=> 151200
+# find the longest word
+longest = %w{ cat sheep bear }.my_inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+puts longest    
+
 
 #p range.map #{ |v| v + 5 }
-p range.my_map #{ |v| v + 5 }
+# p range.inject { |v| v + 1 }
+# p range.my_inject { |v| v + 1 }
 
 # array = [1,2,4,2]
 
