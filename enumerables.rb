@@ -3,7 +3,6 @@
 # rubocop:disable Metrics/CyclomaticComplexity
 # rubocop:disable Metrics/MethodLength
 # rubocop:disable Metrics/PerceivedComplexity
-# rubocop:disable Metrics/BlockNesting
 module Enumerable
   def my_each
     arr = self
@@ -153,7 +152,7 @@ module Enumerable
     counter = 0
     arr = self
     if argument.nil?
-      if block_given?        
+      if block_given?
         arr.my_each { |current_element| counter += 1 if yield(current_element) }
       else
         arr.my_each { counter += 1 }
@@ -185,32 +184,30 @@ module Enumerable
         end
       end
       accumulator
-    else
-      if num and symb
+    elsif num and symb
+      unless block_given?
+        accumulator = num
+        arr.length.times { |i| accumulator = accumulator.send(symb, arr[i]) }
+        accumulator
+      end
+    elsif num.nil? or symb.nil?
+      if num.is_a?(Symbol)
         unless block_given?
+          accumulator = arr[0]
+          symbol = num
+          (arr.length - 1).times do |i|
+            accumulator = accumulator.send(symbol, arr[i + 1])
+          end
+          accumulator
+        end
+      elsif num.is_a?(Integer)
+        if block_given?
           accumulator = num
-          arr.length.times { |i| accumulator = accumulator.send(symb, arr[i]) }                    
-          accumulator                           
-        end      
-      elsif num.nil? or symb.nil?        
-          if num.is_a?(Symbol)
-            unless block_given?
-              accumulator = arr[0]
-              symbol = num
-              (arr.length - 1).times do |i|
-                accumulator = accumulator.send(symbol, arr[i + 1])
-              end
-              accumulator
-            end
-          elsif num.is_a?(Integer)
-            if block_given?
-              accumulator = num
-              arr.length.times do |i|
-                accumulator = yield(accumulator, arr[i])
-              end
-              accumulator
-            end
-          end        
+          arr.length.times do |i|
+            accumulator = yield(accumulator, arr[i])
+          end
+          accumulator
+        end
       end
     end
   end
@@ -262,4 +259,3 @@ end
 # rubocop:enable Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/PerceivedComplexity
-# rubocop:enable Metrics/BlockNesting
