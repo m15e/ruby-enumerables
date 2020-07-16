@@ -33,7 +33,7 @@ module Enumerable
     arr.to_enum
   end
 
-  def my_all(argument = nil)
+  def my_all?(argument = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
     is_block = block_given?
@@ -72,7 +72,7 @@ module Enumerable
     end
   end
 
-  def my_any(argument = nil)
+  def my_any?(argument = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
     is_block = block_given?
@@ -110,7 +110,7 @@ module Enumerable
     end
   end
 
-  def my_none(argument = nil)
+  def my_none?(argument = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
     is_block = block_given?
