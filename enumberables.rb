@@ -153,13 +153,13 @@ module Enumerable
     counter = 0
     arr = self
     if argument.nil?
-      if block_given?
-        arr.my_each { |current_element| yield(current_element) ? counter += 1 : '' }
+      if block_given?        
+        arr.my_each { |current_element| counter += 1 if yield(current_element) }
       else
         arr.my_each { counter += 1 }
       end
     else
-      arr.my_each { |current_element| current_element == argument ? counter += 1 : '' }
+      arr.my_each { |current_element| counter += 1 if current_element == argument }
     end
     counter
   end
@@ -291,8 +291,35 @@ end
 
 # array = [3, 4, 5, 6, 7]
 # range = (3..7)
-# hash = { num:2, em:4, peop:5 }
+# hash = { num:2, em:2, peop:5 }
+
+array = [1,2,4,2]
+
+puts "original"
+
+p array.count
+p array.count(2)
+p array.count { |x| x%2 == 0 }
+
+puts '---'*50
+
+puts "my_arr"
+
+p array.my_count
+p array.my_count(2)
+p array.my_count { |x| x%2 == 0 }
+
 # p hash.all?{|i| i>1}
+
+#p array.count(3) { |n| n >= 5 } # works but block not used
+#p array.count { |n| n >= 5 } # if block given inside of block is counted
+
+#p array.count(2) # counts number of occurences
+# p range.count #{|k,v| v > 3 }  # only block or argument - argument takes priority
+# p range.my_count #{|k,v| v > 3 }
+
+
+#p array.count 
 
 # p %w[ant bear cat].any?(/t/)
 # p %w[ant bear cat].my_any(/t/){|jjjh|}                     #=> false -- fail
