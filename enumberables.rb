@@ -5,15 +5,13 @@
 # rubocop:disable Metrics/PerceivedComplexity
 # rubocop:disable Metrics/BlockNesting
 module Enumerable
-  def my_each
+  def my_each    
     arr = self
-    if arr.is_a?(Array)
-      arr.length.times do |i|
-        yield(arr[i])
-      end
-    else
-      puts 'This method needs to be called on arrays only'
+    if block_given?     
+      arr = arr.is_a?(Array) ? arr : arr.to_a   
+      arr.length.times {|i| yield(arr[i])}              
     end
+    arr.to_enum
   end
 
   def my_each_with_index
@@ -192,3 +190,21 @@ end
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/PerceivedComplexity
 # rubocop:enable Metrics/BlockNesting
+
+arr = [5,10,15]
+
+rnge = (5..10)
+
+hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
+
+#p hsh.to_a #{|v| puts "v: #{v}" }
+#hsh.my_each {|v| puts "v: #{v}" }
+# rnge.each {|v| puts "v: #{v}" }
+
+# arr.each {|v| puts "v: #{v}" }
+
+p hsh.my_each #{|v| p v}
+
+p hsh.each #{|v| p v}
+
+#p (5..10).to_a
