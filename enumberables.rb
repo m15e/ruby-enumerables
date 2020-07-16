@@ -169,10 +169,9 @@ module Enumerable
     new_array = []
     if block_given?
       arr.my_each { |current_element| new_array.push(yield(current_element)) }
-    else
-      puts 'You should specify block'
+      new_array
     end
-    new_array
+    arr.to_enum
   end
 
   def my_inject(num = nil, symb = nil)
@@ -290,24 +289,32 @@ end
 # p [nil, true, 99].my_any
 
 # array = [3, 4, 5, 6, 7]
-# range = (3..7)
+range = (3..7)
 # hash = { num:2, em:2, peop:5 }
 
-array = [1,2,4,2]
+# hash.map { |k,v| p v }
 
-puts "original"
+# hash.my_map { |k,v| p v }
 
-p array.count
-p array.count(2)
-p array.count { |x| x%2 == 0 }
 
-puts '---'*50
+#p range.map #{ |v| v + 5 }
+p range.my_map #{ |v| v + 5 }
 
-puts "my_arr"
+# array = [1,2,4,2]
 
-p array.my_count
-p array.my_count(2)
-p array.my_count { |x| x%2 == 0 }
+# puts "original"
+
+# p array.count
+# p array.count(2)
+# p array.count { |x| x%2 == 0 }
+
+# puts '---'*50
+
+# puts "my_arr"
+
+# p array.my_count
+# p array.my_count(2)
+# p array.my_count { |x| x%2 == 0 }
 
 # p hash.all?{|i| i>1}
 
