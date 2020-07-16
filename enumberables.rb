@@ -195,6 +195,32 @@ rnge = (5..10)
 
 hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 
+
+#### ALL tests
+
+# p %w[ant bear cat].all? { |word| word.length >= 3 } #=> true
+# p %w[ant bear cat].my_all { |word| word.length >= 3 } # -- pass
+
+
+# p %w[ant bear cat].all? { |word| word.length >= 4 } #=> false
+# p %w[ant bear cat].my_all { |word| word.length >= 4 } # -- pass
+
+# p [].all?                                           #=> true -- pass
+# p [].my_all    
+
+# p %w[ant bear cat].all?(/t/)
+# p %w[ant bear cat].my_all(/t/)                        #=> false -- fail
+
+# p [1, 2i, 3.14].all?(Numeric)                       #=> true -- fail
+# p [1, 2i, 3.14].my_all(Numeric)
+
+# p [nil, true, 99].all?                              #=> false -- fail
+# p [nil, true, 99].my_all
+
+
+
+
+
 #p arr.select { |n| !n.zero? }
 #p rnge.select { |n| !n.zero? }
 
@@ -204,9 +230,9 @@ hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 
 # p hsh.my_select { |n,v| p "#{n},v: #{v}" }
 
-p [1,2,3,4,5].select #{ |num|  num.even?  } 
+# p [1,2,3,4,5].select #{ |num|  num.even?  } 
 
-p [1,2,3,4,5].my_select #{ |num|  num.even?  } 
+# p [1,2,3,4,5].my_select #{ |num|  num.even?  } 
 
 
 #p hsh.to_a #{|v| puts "v: #{v}" }
