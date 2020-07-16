@@ -5,36 +5,36 @@
 # rubocop:disable Metrics/PerceivedComplexity
 # rubocop:disable Metrics/BlockNesting
 module Enumerable
-  def my_each    
+  def my_each
     arr = self
-    if block_given?     
-      arr = arr.is_a?(Array) ? arr : arr.to_a   
-      arr.length.times {|i| yield(arr[i])}              
+    if block_given?
+      arr = arr.is_a?(Array) ? arr : arr.to_a
+      arr.length.times { |i| yield(arr[i]) }
     end
     arr.to_enum
   end
 
   def my_each_with_index
     arr = self
-    if block_given?     
-      arr = arr.is_a?(Array) ? arr : arr.to_a   
-      arr.length.times {|i| yield(arr[i], i)}              
+    if block_given?
+      arr = arr.is_a?(Array) ? arr : arr.to_a
+      arr.length.times { |i| yield(arr[i], i) }
     end
-    arr.to_enum    
+    arr.to_enum
   end
 
   def my_select
-    arr = self    
+    arr = self
     if block_given?
       new_arr = []
-      arr = arr.is_a?(Array) ? arr : arr.to_a   
+      arr = arr.is_a?(Array) ? arr : arr.to_a
       arr.my_each { |condition| new_arr.push(condition) if yield(condition) }
       new_arr
     end
     arr.to_enum
   end
 
-  def my_all
+  def my_all(argument = nil)
     arr = self
     if arr.is_a?(Array)
       all_true = true
@@ -214,8 +214,8 @@ hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 # p [1, 2i, 3.14].all?(Numeric)                       #=> true -- fail
 # p [1, 2i, 3.14].my_all(Numeric)
 
-# p [nil, true, 99].all?                              #=> false -- fail
-# p [nil, true, 99].my_all
+p [nil, true, 99].all?                              #=> false -- fail
+p [nil, true, 99].my_all
 
 
 
@@ -255,5 +255,5 @@ hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 #   hash[item] = index
 # }
 
-# p hash   #=> {"cat"=>0, "dog"=>1, "wombat"=>2} 
+# p hash   #=> {"cat"=>0, "dog"=>1, "wombat"=>2}
 
