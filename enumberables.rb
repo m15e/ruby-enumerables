@@ -47,7 +47,7 @@ module Enumerable
         all_true
       elsif argument.class == Class
         all_true = true
-        arr.my_each { |current_element| all_true = current_element.class == argument || Numeric ? all_true : false }
+        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? all_true : false }
         all_true
       end
     elsif is_block && !is_argument
@@ -61,7 +61,7 @@ module Enumerable
         all_true
       elsif argument.class == Class
         all_true = true
-        arr.my_each { |current_element| all_true = current_element.class == argument || Numeric ? all_true : false }
+        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? all_true : false }
         all_true
       end
     elsif !is_block && !is_argument
@@ -85,7 +85,7 @@ module Enumerable
         all_true
       elsif argument.class == Class
         all_true = false
-        arr.my_each { |current_element| all_true = current_element.class == argument || Numeric ? true : all_true }
+        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? true : all_true }
         all_true
       end
     elsif is_block && !is_argument
@@ -99,7 +99,7 @@ module Enumerable
         all_true
       elsif argument.class == Class
         all_true = false
-        arr.my_each { |current_element| all_true = current_element.class == argument || Numeric ? true : all_true }
+        arr.my_each { |current_element| all_true = current_element.is_a?(argument) true : all_true }
         all_true
       end
     elsif !is_block && !is_argument
@@ -111,19 +111,41 @@ module Enumerable
     end
   end
 
-
-
-
-  def my_none
+  def my_none(argument = nil)
     arr = self
-    if arr.is_a?(Array)
-      all_true = true
-      arr.my_each do |condition|
-        all_true = yield(condition) ? false : all_true
+    arr = arr.is_a?(Array) ? arr : arr.to_a
+    is_block = block_given?
+    is_argument = !argument.nil?
+
+    if is_block && is_argument
+      if argument.is_a?(Regexp)
+        all_true = true
+        arr.my_each { |current_element| all_true = argument.match(current_element) ? false : all_true }
+        all_true
+      elsif argument.class == Class
+        all_true = true
+        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? false : all_true }
+        all_true
       end
+
+    elsif is_block && !is_argument
+      all_true = true
+      arr.my_each { |condition| all_true = yield(condition) ? false : all_true }
       all_true
-    else
-      puts 'This method needs to be called on arrays only'
+    elsif !is_block && is_argument
+      if argument.is_a?(Regexp)
+        all_true = true
+        arr.my_each { |current_element| all_true = argument.match(current_element) ? false : all_true }
+        all_true
+      elsif argument.class == Class
+        all_true = true
+        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? false : all_true }
+        all_true
+      end
+    elsif !is_block && !is_argument
+      all_true = true
+      arr.my_each { |current_element| all_true = current_element ? false : all_true }
+      all_true
     end
   end
 
@@ -323,4 +345,22 @@ end
 # }
 
 # p hash   #=> {"cat"=>0, "dog"=>1, "wombat"=>2}
+
+
+# p %w{ant bear cat}.none? { |word| word.length == 5 } #=> true
+# p %w{ant bear cat}.my_none { |word| word.length == 5 } #=> true==>pass
+# p %w{ant bear cat}.none? { |word| word.length >= 4 } #=> false
+# p %w{ant bear cat}.my_none { |word| word.length >= 4 } #=> false ==>pass
+# p %w{ant bear cat}.none?(/d/)                        #=> true
+# p %w{ant bear cat}.my_none(/d/)                        #=> true==>pass
+# p [1, 3.14, 42].none?(String)                         #=> false
+# p [1, 3.14, 42].my_none(String)                         #=> false==>fail
+# p [].none?                                           #=> true
+# p [].my_none                                           #=> true
+# p [nil].none?                                        #=> true
+# p [nil].my_none                                        #=> true==>passing
+# p [nil, false].none?                                 #=> true
+# p [nil, false].my_none                                 #=> true==>passing
+# p [nil, false, true].none?                             #=> false
+# p [nil, false, true].my_none                           #=> false==>pass
 
