@@ -16,13 +16,13 @@ module Enumerable
 
   def my_each_with_index
     arr = self
-    if arr.is_a?(Array)
-      arr.length.times do |i|
-        yield(arr[i], i)
-      end
-    else
-      puts 'This method needs to be called on arrays only'
+
+    if block_given?     
+      arr = arr.is_a?(Array) ? arr : arr.to_a   
+      arr.length.times {|i| yield(arr[i], i)}              
     end
+    arr.to_enum
+    
   end
 
   def my_select
@@ -203,8 +203,19 @@ hsh  = { :bolsym => 3, "strkey" => 2, "bob" => 25  }
 
 # arr.each {|v| puts "v: #{v}" }
 
-p hsh.my_each #{|v| p v}
+# rnge.my_each_with_index { |val,index| puts "index: #{index} for #{val}" if val < 30}
+# puts " "
+# rnge.each.with_index { |val,index| puts "index: #{index} for #{val}" if val < 30}
 
-p hsh.each #{|v| p v}
+# %w(cat dog wombat).my_each_with_index { |i, idx| p "item: #{i} idx:  #{idx}" }
 
+# %w(cat dog wombat).each.with_index { |i, idx| p "item: #{i} idx:  #{idx}" }   #=> {"cat"=>0, "dog"=>1, "wombat"=>2}
 #p (5..10).to_a
+
+hash = Hash.new
+%w(cat dog wombat).my_each_with_index { |item, index|
+  hash[item] = index
+}
+
+p hash   #=> {"cat"=>0, "dog"=>1, "wombat"=>2} 
+
