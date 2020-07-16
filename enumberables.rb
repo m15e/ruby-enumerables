@@ -99,7 +99,7 @@ module Enumerable
         all_true
       elsif argument.class == Class
         all_true = false
-        arr.my_each { |current_element| all_true = current_element.is_a?(argument) true : all_true }
+        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? true : all_true }
         all_true
       end
     elsif !is_block && !is_argument
