@@ -24,13 +24,12 @@ module Enumerable
 
   def my_select
     arr = self
-    if block_given?
-      new_arr = []
-      arr = arr.is_a?(Array) ? arr : arr.to_a
-      arr.my_each { |condition| new_arr.push(condition) if yield(condition) }
-      new_arr
-    end
-    arr.to_enum
+    return arr.to_enum unless block_given?
+
+    new_arr = []
+    arr = arr.is_a?(Array) ? arr : arr.to_a
+    arr.my_each { |condition| new_arr.push(condition) if yield(condition) }
+    new_arr
   end
 
   def my_all?(argument = nil)
@@ -165,12 +164,12 @@ module Enumerable
 
   def my_map
     arr = self
+    arr = arr.is_a?(Array) ? arr : arr.to_a
     new_array = []
-    if block_given?
-      arr.my_each { |current_element| new_array.push(yield(current_element)) }
-      new_array
-    end
-    arr.to_enum
+    return arr.to_enum unless block_given?
+
+    arr.my_each { |current_element| new_array.push(yield(current_element)) }
+    new_array
   end
 
   def my_inject(num = nil, symb = nil)
