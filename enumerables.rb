@@ -35,11 +35,8 @@ module Enumerable
   def my_all?(argument = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
-    is_block = block_given?
-    is_argument = !argument.nil?
-
-    if is_block && is_argument
-      all_true = true
+    all_true = true
+    if !argument.nil?
       if argument.is_a?(Regexp)
         arr.my_each { |current_element| all_true = argument.match(current_element) ? all_true : false }
       elsif argument.class == Class
@@ -47,37 +44,19 @@ module Enumerable
       else
         arr.my_each { |current_element| all_true = current_element == argument ? all_true : false }
       end
-      all_true
-    elsif is_block && !is_argument
-      all_true = true
+    elsif block_given? && argument.nil?
       arr.my_each { |condition| all_true = yield(condition) ? all_true : false }
-      all_true
-    elsif !is_block && is_argument
-      all_true = true
-      if argument.is_a?(Regexp)
-        arr.my_each { |current_element| all_true = argument.match(current_element) ? all_true : false }
-      elsif argument.class == Class
-        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? all_true : false }
-      else
-        arr.my_each { |current_element| all_true = current_element == argument ? all_true : false }
-      end
-      all_true
-    elsif !is_block && !is_argument
-      all_true = true
+    elsif !block_given? && argument.nil?
       arr.my_each { |current_element| all_true = current_element ? all_true : false }
-      all_true
-    else
-      arr.to_enum
     end
+    all_true
   end
 
   def my_any?(argument = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
-    is_block = block_given?
-    is_argument = !argument.nil?
-    if is_block && is_argument
-      all_true = false
+    all_true = false
+    if !argument.nil?
       if argument.is_a?(Regexp)
         arr.my_each { |current_element| all_true = argument.match(current_element) ? true : all_true }
       elsif argument.class == Class
@@ -85,38 +64,20 @@ module Enumerable
       else
         arr.my_each { |current_element| all_true = current_element == argument ? true : all_true }
       end
-      all_true
-    elsif is_block && !is_argument
-      all_true = false
+    elsif block_given? && argument.nil?
       arr.my_each { |condition| all_true = yield(condition) || all_true }
       all_true
-    elsif !is_block && is_argument
-      all_true = false
-      if argument.is_a?(Regexp)
-        arr.my_each { |current_element| all_true = argument.match(current_element) ? true : all_true }
-      elsif argument.class == Class
-        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? true : all_true }
-      else
-        arr.my_each { |current_element| all_true = current_element == argument ? true : all_true }
-      end
-      all_true
-    elsif !is_block && !is_argument
-      all_true = false
+    elsif !block_given? && argument.nil?
       arr.my_each { |current_element| all_true = current_element ? true : all_true }
-      all_true
-    else
-      arr.to_enum
     end
+    all_true
   end
 
   def my_none?(argument = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
-    is_block = block_given?
-    is_argument = !argument.nil?
-
-    if is_block && is_argument
-      all_true = true
+    all_true = true
+    if !argument.nil?
       if argument.is_a?(Regexp)
         arr.my_each { |current_element| all_true = argument.match(current_element) ? false : all_true }
       elsif argument.class == Class
@@ -124,26 +85,12 @@ module Enumerable
       else
         arr.my_each { |current_element| all_true = current_element == argument ? false : all_true }
       end
-      all_true
-    elsif is_block && !is_argument
-      all_true = true
+    elsif block_given? && argument.nil?
       arr.my_each { |condition| all_true = yield(condition) ? false : all_true }
-      all_true
-    elsif !is_block && is_argument
-      all_true = true
-      if argument.is_a?(Regexp)
-        arr.my_each { |current_element| all_true = argument.match(current_element) ? false : all_true }
-      elsif argument.class == Class
-        arr.my_each { |current_element| all_true = current_element.is_a?(argument) ? false : all_true }
-      else
-        arr.my_each { |current_element| all_true = current_element == argument ? false : all_true }
-      end
-      all_true
-    elsif !is_block && !is_argument
-      all_true = true
+    elsif !block_given? && argument.nil?
       arr.my_each { |current_element| all_true = current_element ? false : all_true }
-      all_true
     end
+    all_true
   end
 
   def my_count(argument = nil)
@@ -252,21 +199,7 @@ def multiply_els(argument = nil)
     puts 'Pass an array'
   end
 end
-
 # rubocop:enable Metrics/ModuleLength
 # rubocop:enable Metrics/CyclomaticComplexity
 # rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/PerceivedComplexity
-
-# word = %w[dog door rod blade]
-# p word.all?(5) {|kkkj|}
-# p word.my_all?(5) {|kkkj|}
-
-# hash = Hash.new
-# %w(cat dog wombat).each_with_index { |item, index|
-#   hash[item] = index
-# }
-# p hash   #=> {"cat"=>0, "dog"=>1, "wombat"=>2}
-
-# array = ['people','from','this','this','company']
-# array.each
