@@ -150,23 +150,15 @@ module Enumerable
   def my_map(passed_proc = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
+    new_array = []
     if passed_proc.nil?
-      if block_given?
-        new_array = []
-        arr.my_each do |current_element|
-          new_array.push(yield(current_element))
-        end
-        new_array
-      else
-        arr.to_enum
-      end
+      return arr.to_enum unless block_given?
+
+      arr.my_each { |current_element| new_array.push(yield(current_element)) }
     else
-      new_array = []
-      arr.my_each do |current_element|
-        new_array.push(passed_proc.call(current_element))
-      end
-      new_array
+      arr.my_each { |current_element| new_array.push(passed_proc.call(current_element)) }
     end
+    new_array
   end
 end
 
