@@ -6,20 +6,20 @@
 module Enumerable
   def my_each
     arr = self
-    if block_given?
-      arr = arr.is_a?(Array) ? arr : arr.to_a
-      arr.length.times { |i| yield(arr[i]) }
-    end
-    arr.to_enum
+    return arr.to_enum unless block_given?
+
+    arr = arr.is_a?(Array) ? arr : arr.to_a
+    arr.length.times { |i| yield(arr[i]) }
+    arr
   end
 
   def my_each_with_index
     arr = self
-    if block_given?
-      arr = arr.is_a?(Array) ? arr : arr.to_a
-      arr.length.times { |i| yield(arr[i], i) }
-    end
-    arr.to_enum
+    return arr.to_enum unless block_given?
+
+    arr = arr.is_a?(Array) ? arr : arr.to_a
+    arr.length.times { |i| yield(arr[i], i) }
+    arr
   end
 
   def my_select
