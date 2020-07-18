@@ -108,16 +108,6 @@ module Enumerable
     counter
   end
 
-  def my_map
-    arr = self
-    arr = arr.is_a?(Array) ? arr : arr.to_a
-    new_array = []
-    return arr.to_enum unless block_given?
-
-    arr.my_each { |current_element| new_array.push(yield(current_element)) }
-    new_array
-  end
-
   def my_inject(num = nil, symb = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
@@ -157,17 +147,7 @@ module Enumerable
     end
   end
 
-  def my_map_with_proc(passed_proc)
-    arr = self
-    arr = arr.is_a?(Array) ? arr : arr.to_a
-    new_array = []
-    arr.my_each do |current_element|
-      new_array.push(passed_proc.call(current_element))
-    end
-    new_array
-  end
-
-  def my_map_with_proc_block(passed_proc = nil)
+  def my_map(passed_proc = nil)
     arr = self
     arr = arr.is_a?(Array) ? arr : arr.to_a
     if passed_proc.nil?
