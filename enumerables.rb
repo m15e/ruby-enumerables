@@ -195,33 +195,3 @@ end
 #   let(:hash) { { a: 1, b: 2, c: 3, d: 4, e: 5 } }
 #   let(:numbers) { [1, 2i, 3.14] }
 #   let!(:array_clone) { array.clone }
-
-# Sum some numbers
-# p (5..10).inject                         #=> 45
-# Same using a block and inject
-# p (5..10).inject { |sum, n| sum + n }            #=> 45
-# Multiply some numbers
-# p (5..10).inject                          #=> 151200
-# # Same using a block
-# p (5..10).inject(1) { |product, n| product * n } #=> 151200
-# # find the longest word
-# longest = %w{ cat sheep bear }.inject do |memo, word|
-#    memo.length > word.length ? memo : word
-# end
-# p longest                                        #=> "sheep"
-
-puts "============================================"
-
-# Sum some numbers
-p (5..10).my_inject                            #=> 45
-# Same using a block and inject
-# p (5..10).my_inject { |sum, n| sum + n }            #=> 45
-# # Multiply some numbers
-# p (5..10).my_inject(1, :*)                          #=> 151200
-# # Same using a block
-# p (5..10).my_inject(1) { |product, n| product * n } #=> 151200
-# # find the longest word
-# longest = %w{ cat sheep bear }.my_inject do |memo, word|
-#    memo.length > word.length ? memo : word
-# end
-# p longest                                        #=> "sheep"
